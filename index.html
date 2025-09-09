@@ -15,6 +15,9 @@
 
 <body>
 
+	<button id="install-button" style="display:none;position:fixed;bottom:20px;right:20px;z-index:1000;">
+  Install App
+</button>
 	<header>
 		<h2><a href="#">Website Logo</a></h2>
 		<nav>
@@ -98,6 +101,25 @@
 		<p>Made by <a href="http://tutorialzine.com/" target="_blank">tutorialzine</a>. images courtesy to <a href="http://unsplash.com/" target="_blank">unsplash</a>.</p>
 		<p>No attribution required. you can remove this footer.</p>
 	</footer>
+	<script>
+let deferredPrompt;
+const installBtn = document.getElementById('install-button');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.style.display = 'block';
+});
+
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log('User response:', outcome);
+  deferredPrompt = null;
+  installBtn.style.display = 'none';
+});
+</script>
 <script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
